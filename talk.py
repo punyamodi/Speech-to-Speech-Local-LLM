@@ -1,18 +1,13 @@
-import os
 import torch
 import argparse
 import pyaudio
 import wave
-from zipfile import ZipFile
-import langid
 import se_extractor
 from api import BaseSpeakerTTS, ToneColorConverter
-import openai
 from openai import OpenAI
 import os
-import time
-import speech_recognition as sr
-import  whisper
+import whisper
+import keyboard
 
 # ANSI escape codes for colors
 PINK = '\033[95m'
@@ -87,23 +82,24 @@ def process_and_play(prompt, style, audio_file_pth):
     speaker_wav = audio_file_pth
 
     # Process text and generate audio
-    try:
-        target_se, audio_name = se_extractor.get_se(speaker_wav, tone_color_converter, target_dir='processed', vad=True)
+    #try:
+    target_se, audio_name = se_extractor.get_se(speaker_wav, tone_color_converter, target_dir='processed', vad=True)
 
-        src_path = f'{output_dir}/tmp.wav'
-        tts_model.tts(prompt, src_path, speaker=style, language='English')
+    src_path = f'{output_dir}/tmp.wav'
+    tts_model.tts(prompt, src_path, speaker=style, language='English')
 
-        save_path = f'{output_dir}/output.wav'
-        # Run the tone color converter
-        encode_message = "@MyShell"
-        tone_color_converter.convert(audio_src_path=src_path, src_se=source_se, tgt_se=target_se, output_path=save_path, message=encode_message)
+    save_path = f'{output_dir}/output.wav'
+    # Run the tone color converter
+    encode_message = "@MyShell"
+    tone_color_converter.convert(audio_src_path=src_path, src_se=source_se, tgt_se=target_se, output_path=save_path, message=encode_message)
 
-        print("Audio generated successfully.")
-        play_audio(src_path)
+    print("Audio generated successfully.")
+    play_audio(src_path)
+    '''
 
     except Exception as e:
         print(f"Error during audio generation: {e}")
-
+    '''
 
 def chatgpt_streamed(user_input, system_message, conversation_history, bot_name):
     """
@@ -160,12 +156,11 @@ def record_audio(file_path):
 
     print("Recording...")
 
-    try:
-        while True:
-            data = stream.read(1024)
-            frames.append(data)
-    except KeyboardInterrupt:
-        pass
+    while True:
+        data = stream.read(1024)
+        frames.append(data)
+        if keyboard.is_pressed('q'):
+            break
 
     print("Recording stopped.")
 
@@ -195,13 +190,13 @@ def user_chatbot_conversation():
 
         print(CYAN + "You:", user_input + RESET_COLOR)
         conversation_history.append({"role": "user", "content": user_input})
-        print(PINK + "Julie:" + RESET_COLOR)
+        print(PINK + "Kiara:" + RESET_COLOR)
         chatbot_response = chatgpt_streamed(user_input, system_message, conversation_history, "Chatbot")
         conversation_history.append({"role": "assistant", "content": chatbot_response})
         
         prompt2 = chatbot_response
         style = "default"
-        audio_file_pth2 = "demo_speaker0.mp3" #your output audio tone file
+        audio_file_pth2 = "resources\example_reference.mp3"
         process_and_play(prompt2, style, audio_file_pth2)
 
         if len(conversation_history) > 20:
