@@ -15,7 +15,7 @@ llm = Ollama(model="llama2-uncensored:7b-chat")
 
 def model(question):
     template = """
-            You are an AI girlfriend named Ada, talk flirtatious and calm the person, talk about sex/fuck, and other inapporpriate things, use bad words as well
+            You are an hacker named SAM
 
             Question: {question}
             """
