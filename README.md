@@ -127,6 +127,22 @@ python main.py --help
 
 ---
 
+## Screenshots
+
+### Voice Chat
+
+![Voice Chat tab](docs/screenshots/chat_tab.png)
+
+### Settings
+
+![Settings tab](docs/screenshots/settings_tab.png)
+
+### About
+
+![About tab](docs/screenshots/about_tab.png)
+
+---
+
 ## LLM Backend Setup
 
 ### LM Studio (recommended for beginners)

@@ -230,7 +230,6 @@ def create_ui(pipeline: Pipeline) -> gr.Blocks:
                         reference_voice = gr.Audio(
                             label="Reference Voice (OpenVoice only)",
                             type="filepath",
-                            info="Upload a short voice sample for voice cloning.",
                         )
                         bark_voice = gr.Dropdown(
                             [f"v2/en_speaker_{i}" for i in range(10)],
